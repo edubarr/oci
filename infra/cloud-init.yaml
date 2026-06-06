@@ -1,0 +1,62 @@
+#cloud-config
+users:
+  - name: eduardo
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [sudo]
+    shell: /bin/bash
+    ssh_authorized_keys:
+      - ${eduardo_ssh_key}
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+
+runcmd:
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - |
+    tee /etc/apt/sources.list.d/docker.sources <<EOF
+    Types: deb
+    URIs: https://download.docker.com/linux/ubuntu
+    Suites: $(lsb_release -cs)
+    Components: stable
+    Signed-By: /etc/apt/keyrings/docker.asc
+    EOF
+  - apt-get update
+  - DEBIAN_FRONTEND=noninteractive apt-get -y upgrade
+  - apt-get install -y nginx certbot python3-certbot-nginx docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable docker
+  - systemctl start docker
+
+  # Add users to docker group
+  - usermod -aG docker ubuntu
+  - usermod -aG docker eduardo
+
+  # Open HTTP/HTTPS in iptables (v4 only), inserting rules if missing and saving persistently
+  - |
+    set -e
+    ipt4=/etc/iptables/rules.v4
+
+    add_if_missing() {
+      local port=$1
+      iptables -C INPUT -p tcp -m state --state NEW -m tcp --dport "$port" -j ACCEPT 2>/dev/null && return
+      # Insert before the default REJECT; using -I without position places near the top, which is acceptable for allow rules
+      iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport "$port" -j ACCEPT
+    }
+
+    add_if_missing 80
+    add_if_missing 443
+
+    iptables-save > "$ipt4"
+    netfilter-persistent save
+
+  # Create application directory for deploy user
+  - mkdir -p /srv/overinspect
+  - chown eduardo:eduardo /srv/overinspect
+  - chmod 755 /srv/overinspect
+
+  - reboot now
