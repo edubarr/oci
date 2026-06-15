@@ -11,13 +11,13 @@ locals {
       reserved_ip_id = var.chimera_vm_reserved_ip_id
       fault_domain   = "FAULT-DOMAIN-2"
     }
-    cerberus = {
-      subnet_cidr    = var.subnet_cerberus_cidr
-      display_name   = "cerberus"
-      subnet_id      = oci_core_subnet.subnet_cerberus.id
-      reserved_ip_id = var.cerberus_vm_reserved_ip_id
-      fault_domain   = "FAULT-DOMAIN-3"
-    }
+    # cerberus = {
+    #   subnet_cidr    = var.subnet_cerberus_cidr
+    #   display_name   = "cerberus"
+    #   subnet_id      = oci_core_subnet.subnet_cerberus.id
+    #   reserved_ip_id = var.cerberus_vm_reserved_ip_id
+    #   fault_domain   = "FAULT-DOMAIN-3"
+    # }
   }
 }
 
@@ -36,8 +36,9 @@ resource "oci_core_instance" "vm" {
   }
 
   source_details {
-    source_type = "image"
-    source_id   = var.ubuntu_image_ocid
+    source_type             = "image"
+    source_id               = var.ubuntu_image_ocid
+    boot_volume_size_in_gbs = 100
   }
 
   create_vnic_details {

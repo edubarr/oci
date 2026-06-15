@@ -55,8 +55,8 @@ runcmd:
     netfilter-persistent save
 
   # Create application directory for deploy user
-  - mkdir -p /srv/overinspect
-  - chown eduardo:eduardo /srv/overinspect
-  - chmod 755 /srv/overinspect
+  - mkdir -p /srv
+  - chown eduardo:eduardo /srv
+  - chmod 755 /srv
 
   - reboot now
