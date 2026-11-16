@@ -56,12 +56,6 @@ resource "oci_core_instance" "vm" {
   }
 }
 
-import {
-  for_each = local.environments
-  to       = oci_core_public_ip.reserved_ip[each.key]
-  id       = each.value.reserved_ip_id
-}
-
 data "oci_core_private_ips" "private_ip_datasource" {
   for_each = local.environments
 

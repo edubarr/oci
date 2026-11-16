@@ -7,8 +7,8 @@ vcn_cidr             = "10.0.0.0/16"
 subnet_chimera_cidr  = "10.0.0.0/24"
 subnet_cerberus_cidr = "10.0.1.0/24"
 
-# Ubuntu Image OCID - Canonical-Ubuntu-24.04-Minimal-aarch64-2025.10.31-0
-ubuntu_image_ocid = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaayiprqwic72dwa6teukf4uyd2vqntqvm4cddvvvjcttsn7zn6jsza"
+# Ubuntu Image OCID - Canonical-Ubuntu-24.04-Minimal-aarch64-2026.11.05-0
+ubuntu_image_ocid = "ocid1.image.oc1.sa-saopaulo-1.aaaaaaaa43t3wf6k4nqdvoeuqycqpz7bh64kvl2jndghclynmgyi4ijouqgq"
 
 # SSH Key
 eduardo_user_ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA6AS3aaQ9Wga07/7xIbX9397I9wZLMJm2tqx7T8+4g/ eduaraujobarros@gmail.com"
